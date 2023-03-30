@@ -1,4 +1,4 @@
-require('../../model/User')
+require('../model/User')
 const mongoose = require('mongoose');
 
 
@@ -19,7 +19,6 @@ module.exports = async function (context) {
     const cookies = myCookie.substring(4);
     if (!cookies) {return context.res = {status: 204}}; //No content
     const refreshToken = cookies;
-    console.log(refreshToken)
 
     // Is refreshToken in db?
     const foundUser = await User.findOne({ refreshToken }).exec();
@@ -32,7 +31,7 @@ module.exports = async function (context) {
                 secure: true,
                 httponly: true,
                 path: "/",
-                expiresIn: -2,
+                maxAge: -2,
                 sameSite: "None",
             }]
         };
@@ -41,7 +40,6 @@ module.exports = async function (context) {
     // Delete refreshToken in db
     foundUser.refreshToken = '';
     const result = await foundUser.save();
-    console.log(result);
 
     context.res = {
         status: 200,
@@ -51,7 +49,7 @@ module.exports = async function (context) {
             secure: true,
             httponly: true,
             path: "/",
-            expiresIn: -2,
+            maxAge: -2,
             sameSite: "None",
         }]
     };

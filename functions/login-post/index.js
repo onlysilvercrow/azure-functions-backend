@@ -1,6 +1,6 @@
-require('../../model/User')
+require('../model/User')
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 module.exports = async function (context) {
     const connectDB = async () => {
@@ -43,8 +43,6 @@ module.exports = async function (context) {
         // Saving refreshToken with current user
         foundUser.refreshToken = refreshToken;
         const result = await foundUser.save();
-        console.log(result);
-        console.log(roles);
 
         // Send authorization roles and access token to user
         context.res = {
@@ -55,10 +53,10 @@ module.exports = async function (context) {
             "cookies": [{
                 name: "jwt",
                 value: refreshToken,
-                secure: false,
+                secure: true,
                 httponly: true,
                 path: "/",
-                expiresIn: 24 * 60 * 60 * 1000,
+                maxAge: 24 * 60 * 60 * 1000,
                 sameSite: "None",
             }]
         }

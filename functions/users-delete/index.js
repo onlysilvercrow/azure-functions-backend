@@ -1,4 +1,4 @@
-require('../../model/User')
+require('../model/User')
 const mongoose = require('mongoose');
 module.exports = async function (context, req) {
     const connectDB = async () => {
